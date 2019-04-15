@@ -13,7 +13,7 @@ $ pip install -e substr_enc
 
 - Run a test
 ```shell
-$ python test.py
+$ pytest -v
 ```
 
 ## Group Members
