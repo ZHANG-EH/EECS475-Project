@@ -1,17 +1,16 @@
 # eecs475-project
 
 ## Instructions
-- Create Python3 Virtual Environement
+Create Python3 Virtual Environement
 ```shell
 $ python3 -m venv env
 $ source env/bin/activate
 ```
-- Install the package
+Install the package
 ```shell
 $ pip install -e substr_enc
 ```
-
-- Run a test
+Run pytest
 ```shell
 $ pytest -v
 ```
