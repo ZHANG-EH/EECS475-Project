@@ -1,5 +1,21 @@
 # eecs475-project
 
+## Instructions
+- Create Python3 Virtual Environement
+```
+python3 -m venv env
+source env/bin/activate
+```
+- Install the package
+```
+pip install -e substr_enc
+```
+
+- Run a test
+```
+python test.py
+```
+
 ## Group Members
 - Enhao Zhang
 - Jiayi Fang
