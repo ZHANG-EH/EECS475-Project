@@ -42,7 +42,6 @@ class SuffixTree:
         for i in range(2, len(s) + 1):
             sufx = s[-i:]
             self.init_helper(cur_node=self.root, suffix=sufx, index=len(s) - i)
-            self.show_tree()
     
     def init_helper(self, cur_node, suffix, index):
         """Helper function for init method, recursively go down the tree."""
@@ -100,13 +99,3 @@ class SuffixTree:
                 next_children = next_children + list(child.children)
             tmp_list = next_children
             ind += 1
-
-
-def main():
-    print('simple test')
-    suffix_tree = SuffixTree('cocoon')
-    suffix_tree.show_tree()
-
-
-if __name__ == '__main__':
-    main()
