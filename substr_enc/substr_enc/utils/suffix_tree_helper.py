@@ -10,7 +10,7 @@ def get_path_helper(node):
         # if this is a root node
         return ''
     else:
-        return node.get_path(node.parent) + node.edge_label
+        return get_path_helper(node.parent) + node.edge_label
 
 
 def get_initial_path_helper(node):
@@ -19,7 +19,7 @@ def get_initial_path_helper(node):
         # if this is a root node
         return ''
     else:
-        return node.parent.get_path() + node.edge_label
+        return node.parent.get_path() + node.edge_label[0]
 
 def get_common_prefix(str_1, str_2):
     """Compute the longest common prefix of two strings."""

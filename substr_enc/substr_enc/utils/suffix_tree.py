@@ -1,5 +1,5 @@
 """
-A simple implementation of a suffix tree,
+A simple implementation of a suffix tree, as specified in the paper,
 used in Substring-Searchable Encryption.
 
 Jiangchen Zhu  <zjcsjtu@umich.edu>
