@@ -1,5 +1,5 @@
 """
-Unit test for suffix tree.
+Unit tests for suffix tree.
 
 Jiangchen Zhu  <zjcsjtu@umich.edu>
 """
@@ -88,7 +88,7 @@ def get_all_suffices(tree):
 
 
 def check_suffices(suffices, full_str):
-    """Check if suffices contain all suffix of the string, with correct leaf label."""
+    """Check if suffices contain all suffices of the string."""
     if len(suffices) != len(full_str) - 1:
         return False
     for index in suffices:
@@ -100,7 +100,10 @@ def check_suffices(suffices, full_str):
 
 
 class TestSuffixTree(unittest.TestCase):
-
+    """
+    Each test case will build a suffix tree upon one string,
+    and check the correctness of the suffix tree.
+    """
     def test_1(self):
         test_str = 'cocoon'
         suffix_tree = se.utils.SuffixTree(test_str)
