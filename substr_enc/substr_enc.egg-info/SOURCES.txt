@@ -1,6 +1,0 @@
-substr_enc/__init__.py
-substr_enc.egg-info/PKG-INFO
-substr_enc.egg-info/SOURCES.txt
-substr_enc.egg-info/dependency_links.txt
-substr_enc.egg-info/requires.txt
-substr_enc.egg-info/top_level.txt
