@@ -6,7 +6,7 @@ In project root directory, create Python3 virtual environement.
 $ python3 -m venv env
 $ source env/bin/activate
 $ which python  # check the python environment
-  <project directory>/env/bin/python
+# <project directory>/env/bin/python
 ```
 Install the package ```substr_enc```.
 ```shell
