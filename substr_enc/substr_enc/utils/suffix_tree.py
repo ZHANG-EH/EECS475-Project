@@ -43,10 +43,9 @@ class SuffixTree:
             sufx = s[-i:]
             self.init_helper(cur_node=self.root, suffix=sufx, index=len(s) - i)
 
-    
+
     def init_helper(self, cur_node, suffix, index):
         """Helper function for init method, recursively go down the tree."""
-        # print(suffix, cur_node.edge_label)
         if suffix == '':
             return
         target_child = None
@@ -88,13 +87,6 @@ class SuffixTree:
             else:
                 # recursively build the tree for suffix
                 self.init_helper(target_child, suffix[common_pre_len:], index)
-
-            # # create another node for the suffix
-            # suf_node = Node()
-            # suf_node.leaf_label = index
-            # suf_node.edge_label = suffix[common_pre_len:]
-            # suf_node.parent = target_child
-            # target_child.children.add(suf_node)
 
 
     def show_tree(self):
