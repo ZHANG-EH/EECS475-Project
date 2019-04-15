@@ -6,7 +6,7 @@ Create Python3 Virtual Environement
 $ python3 -m venv env
 $ source env/bin/activate
 ```
-Install the package
+Install the package ```substr_enc```
 ```shell
 $ pip install -e substr_enc
 ```
