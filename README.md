@@ -1,16 +1,18 @@
 # eecs475-project
 
 ## Instructions
-Create Python3 Virtual Environement
+In project root directory, create Python3 virtual environement.
 ```shell
 $ python3 -m venv env
 $ source env/bin/activate
+$ which python  # check the python environment
+  <project directory>/env/bin/python
 ```
-Install the package ```substr_enc```
+Install the package ```substr_enc```.
 ```shell
 $ pip install -e substr_enc
 ```
-Run pytest
+Run python unit tests.
 ```shell
 $ pytest -v
 ```
