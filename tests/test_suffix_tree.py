@@ -54,6 +54,7 @@ def check_node_sanity(node, is_root=False):
 
 
 def check_all_nodes(tree):
+    """Check all nodes sanity."""
     if not check_node_sanity(tree.root, is_root=True):
         return False
     tmp_list = list(tree.root.children)
@@ -67,10 +68,71 @@ def check_all_nodes(tree):
     return True
 
 
+def traverse_tree(node, cumul_suffix, output):
+    """Preorder traverse the tree and get all possible suffices."""
+    if node == None:
+        return
+    print(node.edge_label)
+    if not node.children:
+        output[node.leaf_label] = cumul_suffix + node.edge_label
+    for child in node.children:
+        tmp = cumul_suffix + node.edge_label
+        traverse_tree(child, tmp, output)
+
+
+def get_all_suffices(tree):
+    """Return all suffices in this tree."""
+    ret_suffices = {}
+    traverse_tree(tree.root, '', ret_suffices)
+    return ret_suffices
+
+
+def check_suffices(suffices, full_str):
+    """Check if suffices contain all suffix of the string, with correct leaf label."""
+    if len(suffices) != len(full_str) - 1:
+        return False
+    for index in suffices:
+        correct_suffix = full_str[index:]
+        student_suffix = suffices[index]
+        if correct_suffix != student_suffix:
+            return False
+    return True
+
+
 class TestSuffixTree(unittest.TestCase):
-    """Very simple test case."""
-    def test_one(self):
-        suffix_tree = se.utils.SuffixTree('cocoon')
-        # self.assertEqual(len(suffix_tree.root.children), 3)
+
+    def test_1(self):
+        test_str = 'cocoon'
+        suffix_tree = se.utils.SuffixTree(test_str)
         # check the sanity of tree
         self.assertEqual(check_all_nodes(suffix_tree), True)
+        # check that the tree gives the correct suffices
+        suffices = get_all_suffices(suffix_tree)
+        self.assertEqual(check_suffices(suffices, test_str + '$'), True)
+
+    def test_2(self):
+        test_str = 'We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.'
+        suffix_tree = se.utils.SuffixTree(test_str)
+        # check the sanity of tree
+        self.assertEqual(check_all_nodes(suffix_tree), True)
+        # check that the tree gives the correct suffices
+        suffices = get_all_suffices(suffix_tree)
+        self.assertEqual(check_suffices(suffices, test_str + '$'), True)
+
+    def test_3(self):
+        test_str = 'Hello, this is our project. We are attempting to build a substring searchable encryption system.'
+        suffix_tree = se.utils.SuffixTree(test_str)
+        # check the sanity of tree
+        self.assertEqual(check_all_nodes(suffix_tree), True)
+        # check that the tree gives the correct suffices
+        suffices = get_all_suffices(suffix_tree)
+        self.assertEqual(check_suffices(suffices, test_str + '$'), True)
+
+    def test_4(self):
+        test_str = 'aflkjaieaufodafjoewiajadfkjafjkjkdsaljd aldjflkjdaf ladjflkdajf ldsa fadjfklaf'
+        suffix_tree = se.utils.SuffixTree(test_str)
+        # check the sanity of tree
+        self.assertEqual(check_all_nodes(suffix_tree), True)
+        # check that the tree gives the correct suffices
+        suffices = get_all_suffices(suffix_tree)
+        self.assertEqual(check_suffices(suffices, test_str + '$'), True)
