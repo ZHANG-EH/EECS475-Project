@@ -42,17 +42,20 @@ class SuffixTree:
         for i in range(2, len(s) + 1):
             sufx = s[-i:]
             self.init_helper(cur_node=self.root, suffix=sufx, index=len(s) - i)
+
     
     def init_helper(self, cur_node, suffix, index):
         """Helper function for init method, recursively go down the tree."""
-        if suffix == '$':
+        # print(suffix, cur_node.edge_label)
+        if suffix == '':
             return
         target_child = None
         # check if there exists an edge starts with the same prefix
-        for child in self.root.children:
+        for child in cur_node.children:
             prefix_tmp = get_common_prefix(suffix, child.edge_label)
             if prefix_tmp:
                 target_child = child
+                break
         
         # if we cannot find a child starts with the same prefix
         if target_child == None:
@@ -60,15 +63,18 @@ class SuffixTree:
             # the cur_node is no longer a leaf node
             cur_node.leaf_label = -1
             cur_node.children.add(target_child)
-            # make a new child
+            # make a new child for the suffix
             target_child.parent = cur_node
             target_child.edge_label = suffix
             target_child.leaf_label = index
+            return
         else:
             common_prefix = get_common_prefix(suffix, target_child.edge_label)
             common_pre_len = len(common_prefix)
             if common_pre_len < len(target_child.edge_label):
-                # need to split the cur_node into two nodes
+                # if the length of common prefix is shorter than the edge of 
+                # target child, then,
+                # need to split the target_child into two nodes
                 new_node = Node()
                 new_node.leaf_label = target_child.leaf_label
                 new_node.children = target_child.children.copy()
@@ -78,12 +84,17 @@ class SuffixTree:
                 target_child.children.add(new_node)
                 target_child.edge_label = common_prefix
                 new_node.parent = target_child
-            # create another node for the suffix
-            suf_node = Node()
-            suf_node.leaf_label = index
-            suf_node.edge_label = suffix[common_pre_len:]
-            suf_node.parent = target_child
-            target_child.children.add(suf_node)
+                self.init_helper(target_child, suffix[common_pre_len:], index)
+            else:
+                # recursively build the tree for suffix
+                self.init_helper(target_child, suffix[common_pre_len:], index)
+
+            # # create another node for the suffix
+            # suf_node = Node()
+            # suf_node.leaf_label = index
+            # suf_node.edge_label = suffix[common_pre_len:]
+            # suf_node.parent = target_child
+            # target_child.children.add(suf_node)
 
 
     def show_tree(self):
@@ -99,3 +110,4 @@ class SuffixTree:
                 next_children = next_children + list(child.children)
             tmp_list = next_children
             ind += 1
+        print('------------------------------------------------')
