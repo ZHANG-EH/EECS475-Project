@@ -72,7 +72,6 @@ def traverse_tree(node, cumul_suffix, output):
     """Preorder traverse the tree and get all possible suffices."""
     if node == None:
         return
-    print(node.edge_label)
     if not node.children:
         output[node.leaf_label] = cumul_suffix + node.edge_label
     for child in node.children:
