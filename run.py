@@ -21,5 +21,8 @@ def main():
     for child in suffix_tree.root.children:
         print(child.edge_label, suffix_tree.get_leafpos(child), suffix_tree.get_num(child))
 
+    se.enc.key_gen()
+
+
 if __name__ == '__main__':
     main()
