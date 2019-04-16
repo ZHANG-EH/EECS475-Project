@@ -21,6 +21,7 @@ def get_initial_path_helper(node):
     else:
         return node.parent.get_path() + node.edge_label[0]
 
+
 def get_common_prefix(str_1, str_2):
     """Compute the longest common prefix of two strings."""
     longest_prefix = ''
@@ -33,3 +34,13 @@ def get_common_prefix(str_1, str_2):
         else:
             break
     return longest_prefix
+
+
+def get_ind_helper(node, output):
+    """Preorder traverse the tree and get the indices of the node."""
+    if node == None:
+        return
+    if not node.children:
+        output.append(node.leaf_label)
+    for child in node.children:
+        get_ind_helper(child, output)
