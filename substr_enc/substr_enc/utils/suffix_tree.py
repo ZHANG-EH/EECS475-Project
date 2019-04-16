@@ -38,6 +38,7 @@ class Node:
         """Return the index in string of the first occurrence of path label."""
         node_inds = []
         get_ind_helper(self, node_inds)
+        return min(node_inds)
     
 
 def init_helper(cur_node, suffix, index):
