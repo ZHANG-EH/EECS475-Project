@@ -17,29 +17,29 @@ class Node:
         self.children = set()
         # if this is a leaf node, leaf_label represents the starting index
         self.leaf_label = -1
-    
-    
+
+
     def get_path(self):
         """Call the helper function and return the path label (incl. $)."""
         return get_path_helper(self)
-    
+
 
     def get_initial_path(self):
         """Call the helper function and return the initial path label."""
         return get_initial_path_helper(self)
 
-    
+
     def get_len(self):
         """Return he length of inital path (may incl. $)."""
         return len(self.get_initial_path())
-    
+
 
     def get_ind(self):
         """Return the index in string of the first occurrence of path label."""
         node_inds = []
         get_ind_helper(self, node_inds)
         return min(node_inds)
-    
+
 
 def init_helper(cur_node, suffix, index):
     """Helper function for init method, recursively go down the tree."""
@@ -52,7 +52,7 @@ def init_helper(cur_node, suffix, index):
         if prefix_tmp:
             target_child = child
             break
-    
+
     # if we cannot find a child starts with the same prefix
     if target_child == None:
         target_child = Node()
@@ -68,7 +68,7 @@ def init_helper(cur_node, suffix, index):
         common_prefix = get_common_prefix(suffix, target_child.edge_label)
         common_pre_len = len(common_prefix)
         if common_pre_len < len(target_child.edge_label):
-            # if the length of common prefix is shorter than the edge of 
+            # if the length of common prefix is shorter than the edge of
             # target child, then,
             # need to split the target_child into two nodes
             new_node = Node()
@@ -110,7 +110,7 @@ class SuffixTree:
             sufx = s[-i:]
             init_helper(cur_node=self.root, suffix=sufx, index=len(s) - i)
         get_leaves_helper(self.root, self.leaves)
-    
+
 
     def get_leafpos(self, node):
         """
@@ -126,7 +126,7 @@ class SuffixTree:
             if leaf_ind < min_leafpos:
                 min_leafpos = leaf_ind
         return min_leafpos
-    
+
 
     def get_num(self, node):
         """Return number of leaves in the subtree rooted at node."""
@@ -149,3 +149,12 @@ class SuffixTree:
             tmp_list = next_children
             ind += 1
         print('------------------------------------------------')
+
+
+    def get_nodes(self, node, output):
+        """Preorder traverse the tree and get nodes."""
+        if node == None:
+            return
+        output.append(node)
+        for child in node.children:
+            self.get_nodes(child, output)
