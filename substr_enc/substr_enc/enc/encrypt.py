@@ -10,8 +10,8 @@ from substr_enc.model import LAMBDA
 import random
 import secrets
 import hashlib
-# from Crypto.Cipher import AES
-# from Crypto import Random
+from Crypto.Cipher import AES
+from Crypto import Random
 
 
 def key_gen():
@@ -59,9 +59,9 @@ def encrypt(k, s):
         xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + str(f1)
         for i in range(0, 128):
             xu += '$' + str(f2[i])
-        # iv = Random.new().read(AES.block_size)
-        # cipher = AES.new(kd, AES.MODE_CFB, iv)
-        # wu = iv + cipher.encrypt(xu)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(kd, AES.MODE_CFB, iv)
+        wu = iv + cipher.encrypt(xu)
 
 
 def main():
