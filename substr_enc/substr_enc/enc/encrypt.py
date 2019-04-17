@@ -16,8 +16,7 @@ from Crypto import Random
 
 def key_gen():
     """Generate the keys according to paper."""
-    # LAMBDA is 64
-    print(LAMBDA)
+    # LAMBDA is 32
     key_list = []
     for i in range(7):
         key_list.append(secrets.token_bytes(LAMBDA))
@@ -35,7 +34,7 @@ def encrypt(k, s):
     k2 = k[4]
     k3 = k[5]
     k4 = k[6]
-    dictionary = {}
+    d = {}
     nodes = []
     tree.get_nodes(tree.root, nodes)
     for node in nodes:
@@ -47,7 +46,8 @@ def encrypt(k, s):
             h2.update(child.get_initial_path().encode('utf-8'))
             g2.append(h2.hexdigest().encode('utf-8'))
         for i in range(len(children) + 1, 129):
-            g2.append(random.randint(1, 2) - 1)
+            h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
+            g2.append(h.hexdigest().encode('utf-8'))
         piu = [i for i in range(0, 128)]
         random.shuffle(piu)
         f2 = [i for i in range(0, 128)]
@@ -62,6 +62,24 @@ def encrypt(k, s):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
         wu = iv + cipher.encrypt(xu)
+        vu = ''
+        for i in range(0, 128):
+            vu += str(f2[i]) + '$'
+        vu += str(wu)
+        d[f1] = vu
+        for i in range(0, 2 * len(s) - len(nodes)):
+            dummy_string = []
+            for j in range(0, 129):
+                h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
+                dummy_string.append(h.hexdigest().encode('utf-8'))
+            iv = Random.new().read(AES.block_size)
+            cipher = AES.new(kd, AES.MODE_CFB, iv)
+            enc0 = iv + cipher.encrypt(str(0))
+            dummy = ''
+            for i in range(0, 128):
+                dummy += str(dummy_string[i]) + '$'
+            dummy += str(enc0)
+            d[dummy_string[128]] = dummy
 
 
 def main():
