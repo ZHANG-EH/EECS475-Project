@@ -62,21 +62,21 @@ def query_client(k, p, d, c, l):
             try:
                 plaintext = obj.decrypt(enc)
                 # f1 != perp
+                print(plaintext)
                 parsed_list = d[plaintext].split("$")
                 break
-            except ValueError:
+            except KeyError:
                 print("Key incorrect or message corrupted")
-    W = parsed_list[128]
-    # server returns W
-    ivencW = W.split("$")
-    iv = bytes.fromhex(ivencW[0])
-    encW = bytes.fromhex(ivencW[1])
+    iv = bytes.fromhex(parsed_list[128])
+    encW = bytes.fromhex(parsed_list[129])
+    print("encW: ", encW)
     obj = AES.new(kd, AES.MODE_CFB, iv)
     try:
         X = obj.decrypt(encW)
-    except ValueError:
+    except KeyError:
         return "No result: perp"
     # X != perp
+    print("X: ", X)
     parsed_X = X.split("$")
     ind = int(parsed_X[0])
     leafpos = int(parsed_X[1])
@@ -98,7 +98,7 @@ def query_client(k, p, d, c, l):
             try:
                 X = obj.decrypt(encT)
                 return "No result: perp"
-            except ValueError:
+            except KeyError:
                 continue
     if ind == 0:
         return "empty string"
@@ -122,7 +122,7 @@ def query_client(k, p, d, c, l):
         obj = AES.new(kc, AES.MODE_CFB, iv)
         try:
             Y = obj.decrypt(encC)
-        except ValueError:
+        except KeyError:
             return "No result: perp"
         parsed_Y = Y.split("$")
         if int(parsed_Y[1]) != ind + i - 1:
@@ -150,7 +150,7 @@ def query_client(k, p, d, c, l):
         obj = AES.new(kl, AES.MODE_CFB, iv)
         try:
             dectext = obj.decrypt(encL)
-        except ValueError:
+        except KeyError:
             return "No result: perp"
         parsed_dec = dectext.split("$")
         if int(arsed_dec[1]) != leafpos + i - 1:
