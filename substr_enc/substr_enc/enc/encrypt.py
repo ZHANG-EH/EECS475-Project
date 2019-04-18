@@ -45,10 +45,10 @@ def encrypt(k, s):
             children.append(child)
             h2 = hashlib.blake2b(key = k2, digest_size = LAMBDA)
             h2.update(child.get_initial_path().encode('utf-8'))
-            g2.append(h2.hexdigest().encode('utf-8'))
+            g2.append(h2.digest())
         for i in range(len(children), 128):
             h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
-            g2.append(h.hexdigest().encode('utf-8'))
+            g2.append(h.digest())
         piu = [i for i in range(0, 128)]
         random.Random(hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)).shuffle(piu)
         f2 = [i for i in range(0, 128)]
@@ -56,7 +56,7 @@ def encrypt(k, s):
             f2[i] = g2[piu[i]]
         h1 = hashlib.blake2b(key = k1, digest_size = LAMBDA)
         h1.update(node.get_initial_path().encode('utf-8'))
-        f1 = h1.hexdigest().encode('utf-8')
+        f1 = h1.digest()
         xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + str(f1)
         for i in range(0, 128):
             xu += '$' + str(f2[i])
@@ -72,7 +72,7 @@ def encrypt(k, s):
         dummy_string = []
         for j in range(0, 129):
             h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
-            dummy_string.append(h.hexdigest().encode('utf-8'))
+            dummy_string.append(h.digest())
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
         enc0 = iv.hex() + '$' + cipher.encrypt(str(0)).hex()
