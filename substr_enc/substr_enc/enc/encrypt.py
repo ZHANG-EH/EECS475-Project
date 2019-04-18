@@ -62,7 +62,7 @@ def encrypt(k, s):
             xu += '$' + str(f2[i])
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        wu = str(iv) + '$' + str(cipher.encrypt(xu))
+        wu = iv.hex() + '$' + cipher.encrypt(xu).hex()
         vu = ''
         for i in range(0, 128):
             vu += str(f2[i]) + '$'
@@ -75,7 +75,7 @@ def encrypt(k, s):
             dummy_string.append(h.hexdigest().encode('utf-8'))
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        enc0 = str(iv) + '$' + str(cipher.encrypt(str(0)))
+        enc0 = iv.hex() + '$' + cipher.encrypt(str(0)).hex()
         dummy = ''
         for i in range(0, 128):
             dummy += str(dummy_string[i]) + '$'
@@ -87,14 +87,14 @@ def encrypt(k, s):
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
-        c[p[i]] = str(iv) + '$' + str(cipher.encrypt(s[i] + str(i)))
+        c[p[i]] = iv.hex() + '$' + cipher.encrypt(s[i] + str(i)).hex()
     l = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
     random.Random(k4).shuffle(p)
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
-        l[p[i]] = str(iv) + '$' + str(cipher.encrypt(str(nodes[i].get_ind()) + str(i)))
+        l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(nodes[i].get_ind()) + str(i)).hex()
     return (d, c, l)
 
 
