@@ -99,8 +99,7 @@ def encrypt(k, s):
 
 
 def main():
-    key_gen()
-    # encrypt(key_gen(), "hello")
+    encrypt(key_gen(), "hello")
 
 
 if __name__ == '__main__':
