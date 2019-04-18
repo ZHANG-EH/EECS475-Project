@@ -57,16 +57,16 @@ def encrypt(k, s):
         h1 = hashlib.blake2b(key = k1, digest_size = LAMBDA)
         h1.update(node.get_initial_path().encode('utf-8'))
         f1 = h1.digest()
-        xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + str(f1)
+        xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + f1.hex()
         for i in range(0, 128):
-            xu += '$' + str(f2[i])
+            xu += '$' + f2[i].hex()
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
         wu = iv.hex() + '$' + cipher.encrypt(xu).hex()
         vu = ''
         for i in range(0, 128):
-            vu += str(f2[i]) + '$'
-        vu += str(wu)
+            vu += f2[i].hex() + '$'
+        vu += wu
         d[f1] = vu
     for i in range(0, 2 * len(s) - len(nodes)):
         dummy_string = []
@@ -78,8 +78,8 @@ def encrypt(k, s):
         enc0 = iv.hex() + '$' + cipher.encrypt(str(0)).hex()
         dummy = ''
         for i in range(0, 128):
-            dummy += str(dummy_string[i]) + '$'
-        dummy += str(enc0)
+            dummy += dummy_string[i].hex() + '$'
+        dummy += enc0
         d[dummy_string[128]] = dummy
     c = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
