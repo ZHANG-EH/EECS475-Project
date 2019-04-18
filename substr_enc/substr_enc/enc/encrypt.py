@@ -49,7 +49,7 @@ def encrypt(k, s):
             h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
             g2.append(h.hexdigest().encode('utf-8'))
         piu = [i for i in range(0, 128)]
-        random.shuffle(piu)
+        random.Random(hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)).shuffle(piu)
         f2 = [i for i in range(0, 128)]
         for i in range(0, 128):
             f2[i] = g2[piu[i]]
@@ -80,6 +80,21 @@ def encrypt(k, s):
                 dummy += str(dummy_string[i]) + '$'
             dummy += str(enc0)
             d[dummy_string[128]] = dummy
+    c = [i for i in range(0, len(s))]
+    p = [i for i in range(0, len(s))]
+    random.Random(k3).shuffle(p)
+    for i in range(0, len(s)):
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(kc, AES.MODE_CFB, iv)
+        c[p[i]] = iv + cipher.encrypt(s[i] + str(i))
+    l = [i for i in range(0, len(s))]
+    p = [i for i in range(0, len(s))]
+    random.Random(k4).shuffle(p)
+    for i in range(0, len(s)):
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(kc, AES.MODE_CFB, iv)
+        l[p[i]] = iv + cipher.encrypt(str(nodes[i].get_ind()) + str(i))
+    return (d, c, l)
 
 
 def main():
