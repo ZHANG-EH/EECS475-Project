@@ -19,7 +19,8 @@ def key_gen():
     # LAMBDA is 32
     key_list = []
     for i in range(7):
-        key_list.append(secrets.token_bytes(LAMBDA))
+        h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
+        key_list.append(h.hexdigest().encode('utf-8'))
     return key_list
 
 
@@ -45,7 +46,7 @@ def encrypt(k, s):
             h2 = hashlib.blake2b(key = k2, digest_size = LAMBDA)
             h2.update(child.get_initial_path().encode('utf-8'))
             g2.append(h2.hexdigest().encode('utf-8'))
-        for i in range(len(children) + 1, 129):
+        for i in range(len(children), 128):
             h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
             g2.append(h.hexdigest().encode('utf-8'))
         piu = [i for i in range(0, 128)]
@@ -61,7 +62,7 @@ def encrypt(k, s):
             xu += '$' + str(f2[i])
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        wu = iv + cipher.encrypt(xu)
+        wu = str(iv) + '$' + str(cipher.encrypt(xu))
         vu = ''
         for i in range(0, 128):
             vu += str(f2[i]) + '$'
@@ -74,7 +75,7 @@ def encrypt(k, s):
             dummy_string.append(h.hexdigest().encode('utf-8'))
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        enc0 = iv + cipher.encrypt(str(0))
+        enc0 = str(iv) + '$' + str(cipher.encrypt(str(0)))
         dummy = ''
         for i in range(0, 128):
             dummy += str(dummy_string[i]) + '$'
@@ -86,19 +87,20 @@ def encrypt(k, s):
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
-        c[p[i]] = iv + cipher.encrypt(s[i] + str(i))
+        c[p[i]] = str(iv) + '$' + str(cipher.encrypt(s[i] + str(i)))
     l = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
     random.Random(k4).shuffle(p)
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
-        l[p[i]] = iv + cipher.encrypt(str(nodes[i].get_ind()) + str(i))
+        l[p[i]] = str(iv) + '$' + str(cipher.encrypt(str(nodes[i].get_ind()) + str(i)))
     return (d, c, l)
 
 
 def main():
-    encrypt(key_gen(), "hello")
+    key_gen()
+    # encrypt(key_gen(), "hello")
 
 
 if __name__ == '__main__':

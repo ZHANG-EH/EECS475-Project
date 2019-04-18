@@ -1,4 +1,4 @@
 import substr_enc
 
 
-LAMBDA = 32
+LAMBDA = 16
