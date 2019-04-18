@@ -42,7 +42,7 @@ def query_client(k, p, d, c, l):
         iv = Random.new().read(AES.block_size)
         obj = AES.new(f2, AES.MODE_CBC, iv)
         # print("T = ", str(iv) + "$" + str(obj.encrypt(f1)))
-        t_list.append(str(iv) + "$" + str(obj.encrypt(f1)))
+        t_list.append(iv.hex() + "$" + obj.encrypt(f1).hex())
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
     emptystring = ''
     h.update(emptystring.encode('utf-8'))
@@ -54,8 +54,8 @@ def query_client(k, p, d, c, l):
     for i in range(m):
         for j in range(128):
             ivenc = t_list[i].split("$")
-            iv = ivenc[0]
-            enc = ivenc[1]
+            iv = bytes.fromhex(ivenc[0])
+            enc = bytes.fromhex(ivenc[1])
             obj = AES.new(parsed_list[j], AES.MODE_CBC, iv)
             try:
                 plaintext = obj.decrypt(enc)
@@ -67,8 +67,8 @@ def query_client(k, p, d, c, l):
     W = parsed_list[128]
     # server returns W
     ivencW = W.split("$")
-    iv = ivencW[0]
-    encW = ivencW[1]
+    iv = bytes.fromhex(ivencW[0])
+    encW = bytes.fromhex(ivencW[1])
     obj = AES.new(kd, AES.MODE_CBC, iv)
     try:
         X = obj.decrypt(encW)
@@ -76,11 +76,11 @@ def query_client(k, p, d, c, l):
         return "No result: perp"
     # X != perp
     parsed_X = X.split("$")
-    ind = parsed_X[0]
-    leafpos = parsed_X[1]
-    num = parsed_X[2]
-    lenvar = parsed_X[3]
-    f1 = parsed_X[4]
+    ind = int(parsed_X[0])
+    leafpos = int(parsed_X[1])
+    num = int(parsed_X[2])
+    lenvar = int(parsed_X[3])
+    f1 = bytes.fromhex(parsed_X[4])
     f_list = parsed_X[5:]
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
     subp = p[:lenvar]
@@ -90,9 +90,9 @@ def query_client(k, p, d, c, l):
     for j in range(lenvar, m):
         for i in range(0, 128):
             ivencT = t_list[j].split("$")
-            iv = ivencT[0]
-            encT = ivencT[1]
-            obj = AES.new(f_list[i], AES.MODE_CBC, iv)
+            iv = bytes.fromhex(ivencT[0])
+            encT = bytes.fromhex(ivencT[1])
+            obj = AES.new(bytes.fromhex(f_list[i]), AES.MODE_CBC, iv)
             try:
                 X = obj.decrypt(encT)
                 return "No result: perp"
@@ -115,15 +115,15 @@ def query_client(k, p, d, c, l):
     # server sends c_list, i.e. (c1, ..., cm)
     for i in range(m):
         ivencC = c_list[m_seq[i]].split("$")
-        iv = ivencC[0]
-        encC = ivencC[1]
+        iv = bytes.fromhex(ivencC[0])
+        encC = bytes.fromhex(ivencC[1])
         obj = AES.new(kc, AES.MODE_CBC, iv)
         try:
             Y = obj.decrypt(encC)
         except ValueError:
             return "No result: perp"
         parsed_Y = Y.split("$")
-        if parsed_Y[1] != ind + i - 1:
+        if int(parsed_Y[1]) != ind + i - 1:
             return "No result: perp"
         if parsed_Y[0] != p[i]:
             return "empty string"
@@ -143,15 +143,15 @@ def query_client(k, p, d, c, l):
     A_list = []
     for i in range(num):
         ivencL = L_list[num_seq[i]].split("$")
-        iv = ivencL[0]
-        encL = ivencL[1]
+        iv = bytes.fromhex(ivencL[0])
+        encL = bytes.fromhex(ivencL[1])
         obj = AES.new(kl, AES.MODE_CBC, iv)
         try:
             dectext = obj.decrypt(encL)
         except ValueError:
             return "No result: perp"
         parsed_dec = dectext.split("$")
-        if parsed_dec[1] != leafpos + i - 1:
+        if int(arsed_dec[1]) != leafpos + i - 1:
             return "No result: perp"
         A_list.append(parsed_dec[0])
     return A_list
