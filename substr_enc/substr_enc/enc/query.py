@@ -17,7 +17,6 @@ import random
 
 def query_client(k, p, d, c, l):
     kd = k[0]
-    print(len(kd))
     kc = k[1]
     kl = k[2]
     k1 = k[3]
@@ -26,24 +25,23 @@ def query_client(k, p, d, c, l):
     k4 = k[6]
     m = len(p)
     t_list = []
-    print(d)
     for i in range(m):
         prefix_p = p[:(i+1)]
         # f1
         h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
         h.update(prefix_p.encode('utf-8'))
         f1 = h.digest()
-        print(f1)
+        # print(f1)
         # f2
         h = hashlib.blake2b(key = k2, digest_size = LAMBDA)
-        print(h.digest_size)
+        # print(h.digest_size)
         h.update(prefix_p.encode('utf-8'))
         f2 = h.digest()
-        print(f2)
+        # print(f2)
         # T
         iv = Random.new().read(AES.block_size)
         obj = AES.new(f2, AES.MODE_CBC, iv)
-        print("T = ", str(iv) + "$" + str(obj.encrypt(f1)))
+        # print("T = ", str(iv) + "$" + str(obj.encrypt(f1)))
         t_list.append(str(iv) + "$" + str(obj.encrypt(f1)))
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
     emptystring = ''
@@ -160,8 +158,9 @@ def query_client(k, p, d, c, l):
 
 
 def main():
-    d, c, l = encrypt(key_gen(), "hello")
-    query_client(key_gen(), "string", d, c, l)
+    key_list = key_gen()
+    d, c, l = encrypt(key_list, "hello")
+    query_client(key_list, "string", d, c, l)
 
 
 if __name__ == '__main__':
