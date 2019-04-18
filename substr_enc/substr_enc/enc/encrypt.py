@@ -83,14 +83,16 @@ def encrypt(k, s):
         d[dummy_string[128]] = dummy
     c = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
-    random.Random(k3).shuffle(p)
+    random.seed(k3)
+    random.shuffle(p)
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
         c[p[i]] = iv.hex() + '$' + cipher.encrypt(s[i] + '$' + str(i)).hex()
     l = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
-    random.Random(k4).shuffle(p)
+    random.seed(k4)
+    random.shuffle(p)
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)

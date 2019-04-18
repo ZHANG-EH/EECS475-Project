@@ -40,7 +40,7 @@ def query_client(k, p, d, c, l):
         # print(f2)
         # T
         iv = Random.new().read(AES.block_size)
-        obj = AES.new(f2, AES.MODE_CBC, iv)
+        obj = AES.new(f2, AES.MODE_CFB, iv)
         # print("T = ", str(iv) + "$" + str(obj.encrypt(f1)))
         t_list.append(iv.hex() + "$" + obj.encrypt(f1).hex())
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
@@ -56,7 +56,9 @@ def query_client(k, p, d, c, l):
             ivenc = t_list[i].split("$")
             iv = bytes.fromhex(ivenc[0])
             enc = bytes.fromhex(ivenc[1])
-            obj = AES.new(parsed_list[j], AES.MODE_CBC, iv)
+            print("parsed_list: ", parsed_list[j])
+            print("len: ", len(parsed_list[j]))
+            obj = AES.new(bytes.fromhex(parsed_list[j]), AES.MODE_CFB, iv)
             try:
                 plaintext = obj.decrypt(enc)
                 # f1 != perp
@@ -69,7 +71,7 @@ def query_client(k, p, d, c, l):
     ivencW = W.split("$")
     iv = bytes.fromhex(ivencW[0])
     encW = bytes.fromhex(ivencW[1])
-    obj = AES.new(kd, AES.MODE_CBC, iv)
+    obj = AES.new(kd, AES.MODE_CFB, iv)
     try:
         X = obj.decrypt(encW)
     except ValueError:
@@ -92,7 +94,7 @@ def query_client(k, p, d, c, l):
             ivencT = t_list[j].split("$")
             iv = bytes.fromhex(ivencT[0])
             encT = bytes.fromhex(ivencT[1])
-            obj = AES.new(bytes.fromhex(f_list[i]), AES.MODE_CBC, iv)
+            obj = AES.new(bytes.fromhex(f_list[i]), AES.MODE_CFB, iv)
             try:
                 X = obj.decrypt(encT)
                 return "No result: perp"
@@ -105,7 +107,7 @@ def query_client(k, p, d, c, l):
     x_list = list(repeat(0, m))
     for i in range(m):
         random.seed(k3)
-        prp_list = [i for i in range(0, len(s))]
+        prp_list = [i for i in range(0, len(c))]
         random.shuffle(prp_list)
         x_list[m_seq[i]] = prp_list[ind + i - 1]
     # client sends x_list, i.e. (x1, ..., xm)
@@ -117,7 +119,7 @@ def query_client(k, p, d, c, l):
         ivencC = c_list[m_seq[i]].split("$")
         iv = bytes.fromhex(ivencC[0])
         encC = bytes.fromhex(ivencC[1])
-        obj = AES.new(kc, AES.MODE_CBC, iv)
+        obj = AES.new(kc, AES.MODE_CFB, iv)
         try:
             Y = obj.decrypt(encC)
         except ValueError:
@@ -132,7 +134,7 @@ def query_client(k, p, d, c, l):
     y_list = list(repeat(0, num))
     for i in range(num):
         random.seed(k4)
-        prp_list = [i for i in range(0, len(s))]
+        prp_list = [i for i in range(0, len(c))]
         random.shuffle(prp_list)
         y_list[num_seq[i]] = prp_list[leafpos + i - 1]
     # client sends y_list, i.e. (y1, ..., ynum)
@@ -145,7 +147,7 @@ def query_client(k, p, d, c, l):
         ivencL = L_list[num_seq[i]].split("$")
         iv = bytes.fromhex(ivencL[0])
         encL = bytes.fromhex(ivencL[1])
-        obj = AES.new(kl, AES.MODE_CBC, iv)
+        obj = AES.new(kl, AES.MODE_CFB, iv)
         try:
             dectext = obj.decrypt(encL)
         except ValueError:
