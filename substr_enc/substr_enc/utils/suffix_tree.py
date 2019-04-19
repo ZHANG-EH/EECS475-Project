@@ -14,7 +14,7 @@ class Node:
         """Initialize the node."""
         self.edge_label = ''
         self.parent = None
-        self.children = set()
+        self.children = []
         # if this is a leaf node, leaf_label represents the starting index
         self.leaf_label = -1
 
@@ -58,7 +58,7 @@ def init_helper(cur_node, suffix, index):
         target_child = Node()
         # the cur_node is no longer a leaf node
         cur_node.leaf_label = -1
-        cur_node.children.add(target_child)
+        cur_node.children.append(target_child)
         # make a new child for the suffix
         target_child.parent = cur_node
         target_child.edge_label = suffix
@@ -77,7 +77,7 @@ def init_helper(cur_node, suffix, index):
             new_node.edge_label = target_child.edge_label[common_pre_len:]
             target_child.leaf_label = -1
             target_child.children.clear()
-            target_child.children.add(new_node)
+            target_child.children.append(new_node)
             target_child.edge_label = common_prefix
             new_node.parent = target_child
             init_helper(target_child, suffix[common_pre_len:], index)
