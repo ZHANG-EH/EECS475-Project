@@ -112,13 +112,13 @@ def query_client(k, p, d, c, l):
             obj = AES.new(bytes.fromhex(f_list[i]), AES.MODE_CFB, iv)
             try:
                 X = obj.decrypt(encT)
-                print("X: ", X)
-                print("here")
+                # print("X: ", X)
+                # print("here")
                 # return "No result: perp"
             except:
                 continue
     if ind == -1:
-        return "empty string"
+        return "no matching query found"
     m_seq = [i for i in range(0, m)]
     random.shuffle(m_seq)
     x_list = list(repeat(0, m))
@@ -126,6 +126,8 @@ def query_client(k, p, d, c, l):
         random.seed(k3)
         prp_list = [i for i in range(0, len(c))]
         random.shuffle(prp_list)
+        if ind + i >= len(c):
+            return "no matching query found"
         x_list[m_seq[i]] = prp_list[ind + i]
     # client sends x_list, i.e. (x1, ..., xm)
     c_list = [i for i in range(0, m)]
@@ -146,7 +148,7 @@ def query_client(k, p, d, c, l):
         if int(parsed_Y[1]) != ind + i:
             return "No result: perp"
         if parsed_Y[0] != p[i]:
-            return "empty"
+            return "no matching query found"
     num_seq = [i for i in range(0, num)]
     random.shuffle(num_seq)
     y_list = list(repeat(0, num))
@@ -182,8 +184,8 @@ def query_client(k, p, d, c, l):
 
 def main():
     key_list = key_gen()
-    d, c, l = encrypt(key_list, "mississippi")
-    result = query_client(key_list, "ppio", d, c, l)
+    d, c, l = encrypt(key_list, "!^%#@*(&#@!^&*#@)")
+    result = query_client(key_list, "#", d, c, l)
     print("result: ", result)
 
 if __name__ == '__main__':
