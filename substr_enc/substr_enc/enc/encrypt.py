@@ -57,6 +57,8 @@ def encrypt(k, s):
         h1 = hashlib.blake2b(key = k1, digest_size = LAMBDA)
         h1.update(node.get_initial_path().encode('utf-8'))
         f1 = h1.digest()
+        print("initial path: ", node.get_initial_path())
+        print(str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()))
         xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + f1.hex()
         for i in range(0, 128):
             xu += '$' + f2[i].hex()
@@ -95,7 +97,7 @@ def encrypt(k, s):
     random.shuffle(p)
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
-        cipher = AES.new(kc, AES.MODE_CFB, iv)
+        cipher = AES.new(kl, AES.MODE_CFB, iv)
         l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(nodes[i].get_ind()) + '$' + str(i)).hex()
     return (d, c, l)
 

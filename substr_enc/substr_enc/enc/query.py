@@ -48,44 +48,57 @@ def query_client(k, p, d, c, l):
     h.update(emptystring.encode('utf-8'))
     root = h.digest()
     # client returns (root, t_list)
-    print("root: ", root)
+    # print("root: ", root)
     parsed_list = d[root].split("$")
-    print("parsed_list length: (should be d + 1) ", len(parsed_list))
+    # print("parsed_list length: (should be d + 1) ", len(parsed_list))
     for i in range(m):
         for j in range(128):
             ivenc = t_list[i].split("$")
             iv = bytes.fromhex(ivenc[0])
             enc = bytes.fromhex(ivenc[1])
-            print("parsed_list: ", parsed_list[j])
-            print("len: ", len(parsed_list[j]))
+            # print("parsed_list: ", parsed_list[j])
+            # print("len: ", len(parsed_list[j]))
             obj = AES.new(bytes.fromhex(parsed_list[j]), AES.MODE_CFB, iv)
             try:
                 plaintext = obj.decrypt(enc)
+                # print("plaintext: ", plaintext)
                 # f1 != perp
-                print(plaintext)
                 parsed_list = d[plaintext].split("$")
+                print("plaintext: ", plaintext)
+                # print("success")
                 break
-            except KeyError:
+            except ValueError:
                 print("Key incorrect or message corrupted")
+            except KeyError:
+                print("wrong decryption")
     iv = bytes.fromhex(parsed_list[128])
+    # print("iv: ", iv)
     encW = bytes.fromhex(parsed_list[129])
-    print("encW: ", encW)
+    # print("encW: ", encW)
+    # print("encW: ", encW)
+    # print("encW: ", encW) # encW = cipher.encrypt(xu)
+    # server sends W (encW)
     obj = AES.new(kd, AES.MODE_CFB, iv)
     try:
-        X = obj.decrypt(encW)
-    except KeyError:
+        X = str(obj.decrypt(encW), "utf-8")
+    except ValueError:
         return "No result: perp"
     # X != perp
     print("X: ", X)
     parsed_X = X.split("$")
     ind = int(parsed_X[0])
+    print("ind: ", ind)
     leafpos = int(parsed_X[1])
+    print("leafpos: ", leafpos)
     num = int(parsed_X[2])
+    print("num: ", num)
     lenvar = int(parsed_X[3])
+    print("lenvar: ", lenvar)
     f1 = bytes.fromhex(parsed_X[4])
     f_list = parsed_X[5:]
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
-    subp = p[:lenvar]
+    subp = p[:(lenvar + 1)]
+    print("subp: ", subp)
     h.update(subp.encode('utf-8'))
     if f1 != h.digest():
         return "No result: perp"
@@ -98,9 +111,9 @@ def query_client(k, p, d, c, l):
             try:
                 X = obj.decrypt(encT)
                 return "No result: perp"
-            except KeyError:
+            except:
                 continue
-    if ind == 0:
+    if ind == -1:
         return "empty string"
     m_seq = [i for i in range(0, m)]
     random.shuffle(m_seq)
@@ -109,7 +122,7 @@ def query_client(k, p, d, c, l):
         random.seed(k3)
         prp_list = [i for i in range(0, len(c))]
         random.shuffle(prp_list)
-        x_list[m_seq[i]] = prp_list[ind + i - 1]
+        x_list[m_seq[i]] = prp_list[ind + i]
     # client sends x_list, i.e. (x1, ..., xm)
     c_list = [i for i in range(0, m)]
     for i in range(m):
@@ -121,11 +134,11 @@ def query_client(k, p, d, c, l):
         encC = bytes.fromhex(ivencC[1])
         obj = AES.new(kc, AES.MODE_CFB, iv)
         try:
-            Y = obj.decrypt(encC)
-        except KeyError:
+            Y = str(obj.decrypt(encC), "utf-8")
+        except ValueError:
             return "No result: perp"
         parsed_Y = Y.split("$")
-        if int(parsed_Y[1]) != ind + i - 1:
+        if int(parsed_Y[1]) != ind + i:
             return "No result: perp"
         if parsed_Y[0] != p[i]:
             return "empty string"
@@ -136,7 +149,7 @@ def query_client(k, p, d, c, l):
         random.seed(k4)
         prp_list = [i for i in range(0, len(c))]
         random.shuffle(prp_list)
-        y_list[num_seq[i]] = prp_list[leafpos + i - 1]
+        y_list[num_seq[i]] = prp_list[leafpos + i]
     # client sends y_list, i.e. (y1, ..., ynum)
     L_list = list(repeat(0, num))
     for i in range(num):
@@ -149,11 +162,11 @@ def query_client(k, p, d, c, l):
         encL = bytes.fromhex(ivencL[1])
         obj = AES.new(kl, AES.MODE_CFB, iv)
         try:
-            dectext = obj.decrypt(encL)
-        except KeyError:
+            dectext = str(obj.decrypt(encL), "utf-8")
+        except ValueError:
             return "No result: perp"
         parsed_dec = dectext.split("$")
-        if int(arsed_dec[1]) != leafpos + i - 1:
+        if int(parsed_dec[1]) != leafpos + i:
             return "No result: perp"
         A_list.append(parsed_dec[0])
     return A_list
@@ -161,9 +174,9 @@ def query_client(k, p, d, c, l):
 
 def main():
     key_list = key_gen()
-    d, c, l = encrypt(key_list, "hello")
-    query_client(key_list, "string", d, c, l)
-
+    d, c, l = encrypt(key_list, "cocoon")
+    result = query_client(key_list, "o", d, c, l)
+    print("result: ", result)
 
 if __name__ == '__main__':
     main()
