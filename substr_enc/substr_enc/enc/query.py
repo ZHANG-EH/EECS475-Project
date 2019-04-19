@@ -175,13 +175,15 @@ def query_client(k, p, d, c, l):
         if int(parsed_dec[1]) != leafpos + i:
             return "No result: perp"
         A_list.append(parsed_dec[0])
+    A_list = list(map(int, A_list))
+    A_list = sorted(A_list)
     return A_list
 
 
 def main():
     key_list = key_gen()
-    d, c, l = encrypt(key_list, "cocoon")
-    result = query_client(key_list, "coo", d, c, l)
+    d, c, l = encrypt(key_list, "mississippi")
+    result = query_client(key_list, "ppio", d, c, l)
     print("result: ", result)
 
 if __name__ == '__main__':
