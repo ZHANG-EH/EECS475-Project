@@ -114,7 +114,7 @@ def query_client(k, p, d, c, l):
                 X = obj.decrypt(encT)
                 print("X: ", X)
                 print("here")
-                return "No result: perp"
+                # return "No result: perp"
             except:
                 continue
     if ind == -1:
@@ -181,7 +181,7 @@ def query_client(k, p, d, c, l):
 def main():
     key_list = key_gen()
     d, c, l = encrypt(key_list, "cocoon")
-    result = query_client(key_list, "n", d, c, l)
+    result = query_client(key_list, "coo", d, c, l)
     print("result: ", result)
 
 if __name__ == '__main__':
