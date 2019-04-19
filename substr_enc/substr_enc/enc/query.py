@@ -64,7 +64,7 @@ def query_client(k, p, d, c, l):
                 # print("plaintext: ", plaintext)
                 # f1 != perp
                 parsed_list = d[plaintext].split("$")
-                print("plaintext: ", plaintext)
+                print("plaintext: ", i, j)
                 # print("success")
                 break
             except ValueError:
@@ -82,9 +82,10 @@ def query_client(k, p, d, c, l):
     try:
         X = str(obj.decrypt(encW), "utf-8")
     except ValueError:
+        print("here")
         return "No result: perp"
     # X != perp
-    print("X: ", X)
+    # print("X: ", X)
     parsed_X = X.split("$")
     ind = int(parsed_X[0])
     print("ind: ", ind)
@@ -97,10 +98,11 @@ def query_client(k, p, d, c, l):
     f1 = bytes.fromhex(parsed_X[4])
     f_list = parsed_X[5:]
     h = hashlib.blake2b(key = k1, digest_size = LAMBDA)
-    subp = p[:(lenvar + 1)]
+    subp = p[:lenvar]
     print("subp: ", subp)
     h.update(subp.encode('utf-8'))
     if f1 != h.digest():
+        # print("here")
         return "No result: perp"
     for j in range(lenvar, m):
         for i in range(0, 128):
@@ -110,6 +112,8 @@ def query_client(k, p, d, c, l):
             obj = AES.new(bytes.fromhex(f_list[i]), AES.MODE_CFB, iv)
             try:
                 X = obj.decrypt(encT)
+                print("X: ", X)
+                print("here")
                 return "No result: perp"
             except:
                 continue
@@ -135,13 +139,14 @@ def query_client(k, p, d, c, l):
         obj = AES.new(kc, AES.MODE_CFB, iv)
         try:
             Y = str(obj.decrypt(encC), "utf-8")
+            print("Y: ", Y)
         except ValueError:
             return "No result: perp"
         parsed_Y = Y.split("$")
         if int(parsed_Y[1]) != ind + i:
             return "No result: perp"
         if parsed_Y[0] != p[i]:
-            return "empty string"
+            return "empty"
     num_seq = [i for i in range(0, num)]
     random.shuffle(num_seq)
     y_list = list(repeat(0, num))
@@ -165,6 +170,7 @@ def query_client(k, p, d, c, l):
             dectext = str(obj.decrypt(encL), "utf-8")
         except ValueError:
             return "No result: perp"
+        print("dectext: ", dectext)
         parsed_dec = dectext.split("$")
         if int(parsed_dec[1]) != leafpos + i:
             return "No result: perp"
@@ -175,7 +181,7 @@ def query_client(k, p, d, c, l):
 def main():
     key_list = key_gen()
     d, c, l = encrypt(key_list, "cocoon")
-    result = query_client(key_list, "o", d, c, l)
+    result = query_client(key_list, "n", d, c, l)
     print("result: ", result)
 
 if __name__ == '__main__':

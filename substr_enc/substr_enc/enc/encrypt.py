@@ -12,6 +12,7 @@ import secrets
 import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
+import operator
 
 
 def key_gen():
@@ -38,6 +39,7 @@ def encrypt(k, s):
     d = {}
     nodes = []
     tree.get_nodes(tree.root, nodes)
+    nodes.sort(key = operator.attrgetter('edge_label'))
     for node in nodes:
         children = []
         g2 = []
@@ -98,7 +100,7 @@ def encrypt(k, s):
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kl, AES.MODE_CFB, iv)
-        l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(nodes[i].get_ind()) + '$' + str(i)).hex()
+        l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(tree.leaves[i].get_ind()) + '$' + str(i)).hex()
     return (d, c, l)
 
 
