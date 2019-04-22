@@ -1,4 +1,5 @@
 """
+(Deprecated and unused)
 This module offers basic connections between one client and one server.
 
 Jiangchen Zhu  <zjcsjtu@umich.edu>
@@ -43,7 +44,7 @@ def recv_data(ssocket):
     data = json.loads(data)
     csock.close()
     # print(data['data'])
-    
+
     return data['data']
 
 

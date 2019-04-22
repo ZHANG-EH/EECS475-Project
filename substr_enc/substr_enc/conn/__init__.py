@@ -1,4 +1,5 @@
 """
+(Deprecated and unused)
 Connection functions initializer
 
 Jiangchen Zhu  <zjcsjtu@umich.edu>
