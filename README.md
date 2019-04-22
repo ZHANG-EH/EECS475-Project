@@ -12,9 +12,9 @@ Install the package ```substr_enc```.
 ```shell
 $ pip install -e substr_enc
 ```
-Run python unit tests.
+Run a searching example.
 ```shell
-$ pytest -v
+$ python run.py
 ```
 
 ## Group Members
