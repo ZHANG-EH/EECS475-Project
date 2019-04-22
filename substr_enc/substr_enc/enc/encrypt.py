@@ -105,11 +105,3 @@ def encrypt(k, s):
         cipher = AES.new(kl, AES.MODE_CFB, iv)
         l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(tree.leaves[i].get_ind()) + '$' + str(i)).hex()
     return (d, c, l)
-
-
-def main():
-    encrypt(key_gen(), "hello")
-
-
-if __name__ == '__main__':
-    main()
