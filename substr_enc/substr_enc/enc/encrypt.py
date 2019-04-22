@@ -13,7 +13,7 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
 import operator
-
+import hmac
 
 def key_gen():
     """Generate the keys according to paper."""
@@ -44,18 +44,18 @@ def encrypt(k, s):
         g2 = []
         for child in node.children:
             children.append(child)
-            h2 = hashlib.blake2b(key = k2, digest_size = LAMBDA)
+            h2 = hmac.new(key = k2, digestmod = hashlib.sha256)
             h2.update(child.get_initial_path().encode('utf-8'))
             g2.append(h2.digest())
         for i in range(len(children), 128):
-            h = hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)
+            h = hmac.new(key = secrets.token_bytes(LAMBDA), digestmod = hashlib.sha256)
             g2.append(h.digest())
         piu = [i for i in range(0, 128)]
         random.Random(hashlib.blake2b(key = secrets.token_bytes(LAMBDA), digest_size = LAMBDA)).shuffle(piu)
         f2 = [i for i in range(0, 128)]
         for i in range(0, 128):
             f2[i] = g2[piu[i]]
-        h1 = hashlib.blake2b(key = k1, digest_size = LAMBDA)
+        h1 = hmac.new(key = k1, digestmod = hashlib.sha256)
         h1.update(node.get_initial_path().encode('utf-8'))
         f1 = h1.digest()
         xu = str(node.get_ind()) + '$' + str(tree.get_leafpos(node)) + '$' + str(tree.get_num(node)) + '$' + str(node.get_len()) + '$' + f1.hex()
