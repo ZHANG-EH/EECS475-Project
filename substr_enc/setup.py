@@ -13,6 +13,6 @@ setup(
     include_package_data=True,
     install_requires=[
         'pytest==4.3.0',
-        'pycrypto==2.6.1'
+        'pycryptodome==3.8.1'
     ]
 )
