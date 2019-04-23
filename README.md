@@ -1,8 +1,13 @@
 # eecs475-project
 
 ## Instructions
-In project root directory, create Python3 virtual environement.
+Clone this project
 ```shell
+$ git clone https://github.com/ZHANG-EH/EECS475-Project.git
+```
+Go to project root directory, create Python3 virtual environement.
+```shell
+$ cd EECS475-Project
 $ python3 -m venv env
 $ source env/bin/activate
 $ which python  # check the python environment
