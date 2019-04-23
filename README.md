@@ -5,17 +5,10 @@ Clone this project
 ```shell
 $ git clone https://github.com/ZHANG-EH/EECS475-Project.git
 ```
-Go to project root directory, create Python3 virtual environement.
+Go to project root directory, install the package.
 ```shell
 $ cd EECS475-Project
-$ python3 -m venv env
-$ source env/bin/activate
-$ which python  # check the python environment
-# <project directory>/env/bin/python
-```
-Install the package ```substr_enc```.
-```shell
-$ pip install -e substr_enc
+$ pip install substr_enc
 ```
 Run a searching example.
 ```shell
