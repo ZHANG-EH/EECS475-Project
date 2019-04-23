@@ -5,7 +5,7 @@ Clone this project
 ```shell
 $ git clone https://github.com/ZHANG-EH/EECS475-Project.git
 ```
-Go to project root directory, install the package.
+Go to project root directory, install the package (make sure you are using ```python 3```).
 ```shell
 $ cd EECS475-Project
 $ pip install substr_enc
