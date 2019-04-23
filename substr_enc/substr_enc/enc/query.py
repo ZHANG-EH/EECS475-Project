@@ -9,8 +9,8 @@ Zhiqi Chen     <zhiqich@umich.edu>
 from substr_enc.utils import Node, SuffixTree
 from substr_enc.model import LAMBDA
 from substr_enc.enc import key_gen, encrypt
-from Crypto.Cipher import AES
-from Crypto import Random
+from Cryptodome.Cipher import AES
+from Cryptodome import Random
 from itertools import repeat
 import hashlib
 import random

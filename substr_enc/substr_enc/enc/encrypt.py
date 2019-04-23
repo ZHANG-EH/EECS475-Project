@@ -10,8 +10,8 @@ from substr_enc.model import LAMBDA
 import random
 import secrets
 import hashlib
-from Crypto.Cipher import AES
-from Crypto import Random
+from Cryptodome.Cipher import AES
+from Cryptodome import Random
 import operator
 import hmac
 
@@ -69,7 +69,7 @@ def encrypt(k, s):
             xu += '$' + f2[i].hex()
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        wu = iv.hex() + '$' + cipher.encrypt(xu).hex()
+        wu = iv.hex() + '$' + cipher.encrypt(xu.encode("utf8")).hex()
         vu = ''
         for i in range(0, 128):
             vu += f2[i].hex() + '$'
@@ -82,7 +82,7 @@ def encrypt(k, s):
             dummy_string.append(h.digest())
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kd, AES.MODE_CFB, iv)
-        enc0 = iv.hex() + '$' + cipher.encrypt(str(0)).hex()
+        enc0 = iv.hex() + '$' + cipher.encrypt(str(0).encode("utf8")).hex()
         dummy = ''
         for i in range(0, 128):
             dummy += dummy_string[i].hex() + '$'
@@ -95,7 +95,7 @@ def encrypt(k, s):
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kc, AES.MODE_CFB, iv)
-        c[p[i]] = iv.hex() + '$' + cipher.encrypt(s[i] + '$' + str(i)).hex()
+        c[p[i]] = iv.hex() + '$' + cipher.encrypt((s[i] + '$' + str(i)).encode("utf8")).hex()
     l = [i for i in range(0, len(s))]
     p = [i for i in range(0, len(s))]
     random.seed(k4)
@@ -103,5 +103,5 @@ def encrypt(k, s):
     for i in range(0, len(s)):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(kl, AES.MODE_CFB, iv)
-        l[p[i]] = iv.hex() + '$' + cipher.encrypt(str(tree.leaves[i].get_ind()) + '$' + str(i)).hex()
+        l[p[i]] = iv.hex() + '$' + cipher.encrypt((str(tree.leaves[i].get_ind()) + '$' + str(i)).encode("utf8")).hex()
     return (d, c, l)
